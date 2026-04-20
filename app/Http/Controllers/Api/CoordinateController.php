@@ -21,7 +21,7 @@ class CoordinateController extends Controller
 
         // check if the request header accept a json response
         // to ensure the validation return the json message instead of redirect to the previous page
-        if(in_array('application/json', $request->getAcceptableContentTypes())) {
+        if(!in_array('application/json', $request->getAcceptableContentTypes())) {
             return response()->json([
                 'message' => 'Content-Type must be application/json',
             ], 400);
