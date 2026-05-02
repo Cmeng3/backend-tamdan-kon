@@ -8,8 +8,8 @@ use App\Models\Coordinate;
 class CoordinateController extends Controller
 {
     public function index() {
-        
-       $latest_coordinate = Coordinate::orderBy('id', 'desc')->first();
+       // ::all() will retrieve all record from db and return as Eloquent collection
+       $latest_coordinate = Coordinate::all()->last();
         
         return response()->json([
             'message' => 'successful get coordinate',
@@ -18,14 +18,6 @@ class CoordinateController extends Controller
     }
 
     public function store(Request $request) {
-
-        // check if the request header accept a json response
-        // to ensure the validation return the json message instead of redirect to the previous page
-        if(!in_array('application/json', $request->getAcceptableContentTypes())) {
-            return response()->json([
-                'message' => 'Content-Type must be application/json',
-            ], 400);
-        }
 
         // validate the request data
         $request->validate([
