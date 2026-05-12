@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\CoordinateController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\BusController;
+use App\Http\Controllers\Api\StudentController;
+
 // get the latest coordinate from the coordinates database
 Route::get('/coordinate', [CoordinateController::class,'index']);
 // post the collection of coordinate from driver divice or iot device to coordinates database
@@ -10,3 +13,18 @@ Route::get('/coordinate', [CoordinateController::class,'index']);
 Route::middleware(['is_expect_json'])->post('/coordinate', [CoordinateController::class,'store']);
 // login api end-point
 Route::post('/login', [AuthController::class, 'login']);
+
+// this route is for testing
+// purpose is to dynamically create a bus{x}_locations table
+Route::get('/create/bus', [BusController::class, 'createBus']);
+
+
+// this two route is use for 2 purpose:
+// - retrieve the latest location from specific bus
+// - retrieve the the current bus status
+// - store the lastest location to the specific bus
+Route::post('/bus/location', [BusController::class, 'getLatestLocation']);
+Route::post('/bus/status', [BusController::class, 'getBusStatus']);
+Route::post('/bus/location/create', [BusController::class, 'storeBusLocation']);
+// get specific student and there current attendance-status info
+Route::post('/student', [StudentController::class, 'getStudentInfo']);

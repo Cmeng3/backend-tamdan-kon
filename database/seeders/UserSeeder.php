@@ -17,8 +17,8 @@ class UserSeeder extends Seeder
         // all default users for db seeding
         $defualt_users = [
             ['name' => 'kunnarak', 'password'=>Hash::make('kunnarak123'), 'email'=>'kunnarak@gmail.com', 'phone_number'=>'016366573'],
-            ['name' => 'phat sokthy', 'password'=>Hash::make('sokthy123'), 'email'=>'sokthy@gmail.com', 'role'=>'driver', 'phone_number'=>'012555666'],
-            ['name' => 'sokhunthea', 'password'=>Hash::make('sokhunthea'), 'email'=>'sokhunthea@gmail.com', 'role'=>'admin', 'phone_number'=>'016555666']
+            ['name' => 'chimeng', 'password'=>Hash::make('chimeng123'), 'email'=>'chimeng@gmail.com', 'role'=>'driver', 'phone_number'=>'012555666'],
+            ['name' => 'ratana', 'password'=>Hash::make('ratana123'), 'email'=>'ratana@gmail.com', 'role'=>'admin', 'phone_number'=>'016555666'],
         ];
         
         // seeding the database with 3 defualt above users, with create method
