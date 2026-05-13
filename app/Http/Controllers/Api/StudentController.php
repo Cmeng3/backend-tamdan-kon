@@ -19,10 +19,11 @@ class StudentController extends Controller
         // check their existing of student with their parent-id
         if(!$student) {
             return response()->json(
-                [
-                    'message' => 'no student exist with this parent',
+                [   
+                    'message' => 'bad request',
+                    'error' => 'no student exist with this parent',
                 ],
-                500
+                400
             );
         }
         // check for student today attendance

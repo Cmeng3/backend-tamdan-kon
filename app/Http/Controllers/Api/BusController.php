@@ -16,18 +16,17 @@ class BusController extends Controller
         $location = DB::table($table)->get()->last();
         // if there no location data yet, return the below response
         if($location == null) {
-            return response()->json(
-                [
-                    'message' => 'no_data',
-                ],
-                400
-            );
+            $lat = '11.587098';
+            $lng = '104.844813';
+        } else {
+            $lat = $location->latitude;
+            $lng = $location->longitude;
         }
         // but if it have a data, return the below response
         return response()->json(
             [
-                'lat'=> $location->latitude,
-                'lng'=> $location->longitude,
+                'lat'=> $lat,
+                'lng'=> $lng,
             ]
         );
     }
@@ -68,6 +67,38 @@ class BusController extends Controller
                 'data'=> $data,
             ]
         );
+        
+    }
+    // update the specific bus status
+    public function updateBusStatus(Request $request) {
+        // get the specific driver id from request body
+        $driver_id = $request->input('driverId');
+        $bus = Bus::where('driver_id', $driver_id)->first();
+        // if the $bus is null, it mean driver have no assign bus yet
+        // becuase there no bus-recored associated with this driver-id
+        if(!$bus){
+            return response()->json(
+                [
+                'message' => 'bad request',
+                'error' => 'driver have no assign bus yet',
+                ], 
+            400);
+        }
+        // show the current bus operation
+        $bus_status = 'bus is currently operate';
+        // switching on-off on bus-active-status
+        if($bus->is_active == 0){
+            $bus->is_active = true;
+        } else {
+            $bus_status = 'bus is currently stop operate';
+            $bus->is_active = false;
+        }
+        // update the bus-active-status
+        $bus->save();
+        // return the response
+        return response()->json([
+            'message' => $bus_status,
+        ]);
         
     }
     // for testing dynamically creating bus_locations table
