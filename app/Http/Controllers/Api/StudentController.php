@@ -51,4 +51,20 @@ class StudentController extends Controller
             'driver_name' => $driver_name
         ]);
     }
+    //
+    public function getStudentId(Request $request) {
+        $parent_id = $request->input('parentId');
+        $student = Student::where('parent_id', $parent_id)->first();
+
+        if(!$student){
+            return response()->json([
+                'message' => 'bad request',
+                'error' => 'there no student existing with this parent'
+            ], 400);
+        }
+
+        return response()->json([
+            'student_id' => $student->id,
+        ]);
+    }
 }

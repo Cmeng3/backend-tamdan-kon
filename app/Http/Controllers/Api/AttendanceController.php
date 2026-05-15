@@ -128,7 +128,6 @@ class AttendanceController extends Controller
                 'student_id' => $student_id,
             ]);
         }
-
         return response()->json([
             'message' => 'student attendance request is now approved',
         ]);
