@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             BusesSeeder::class,
             StudentSeeder::class,
-            AttendanceSeeder::class,
+            // AttendanceSeeder::class,
         ]);
     }
 }

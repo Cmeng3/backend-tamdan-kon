@@ -33,6 +33,14 @@ Route::post('/bus/location/create', [BusController::class, 'storeBusLocation']);
 Route::post('/student', [StudentController::class, 'getStudentInfo']);
 // this attendance routes is use for 2 purpose:
 // - retrieve for current student attendance status
+// - retrieve all attendance records for a specific student
 // - store the latest student attendance
+// - retrieve the attendance request status 
+// - store the new attendance request status
+// - update the attendance request
 Route::post('/attendance', [AttendanceController::class, 'get']);
+Route::post('/attendances', [AttendanceController::class, 'getAll']);
 Route::post('/attendance/create', [AttendanceController::class, 'store']);
+Route::post('/attendance/request/status', [AttendanceController::class, 'getAttendanceRequestStatus']);
+Route::post('/attendance/request/create', [AttendanceController::class, 'storeAttendanceRequest']);
+Route::post('/attendance/request/update', [AttendanceController::class, 'updateAttendanceRequestStatus']);
