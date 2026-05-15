@@ -32,6 +32,12 @@ class AttendanceController extends Controller
         $student_id = $request->input('studentId');
         $attendances = Attendance::where('student_id', $student_id)->get();
         // it could be null, and we will impliment the condition to check it later
+        // letter in future, will compare the students attendance record with the school semester schedule
+        // purpose: to check the student is present at school specific schedule or not
+        foreach($attendances as $key => $att){
+            $att['is_present' ] = true;
+            $attendances[$key] = $att;
+        }
         return response()->json([
             'data' => $attendances,
         ]);
