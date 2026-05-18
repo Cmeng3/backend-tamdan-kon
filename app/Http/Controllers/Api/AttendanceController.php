@@ -58,7 +58,7 @@ class AttendanceController extends Controller
         } else{
             $is_attendance_update = 'attendance already scan';
         }
-        // return the response
+        // return the response 
         return response()->json(
             [
                 'message' => $is_attendance_update,
