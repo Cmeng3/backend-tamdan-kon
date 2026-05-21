@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\CoordinateController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BusController;
+use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\StudentController;
 use App\Http\Controllers\Api\UserController;
 
@@ -49,3 +50,8 @@ Route::post('/attendance/create', [AttendanceController::class, 'store']);
 Route::post('/attendance/request/status', [AttendanceController::class, 'getAttendanceRequestStatus']);
 Route::post('/attendance/request/create', [AttendanceController::class, 'storeAttendanceRequest']);
 Route::post('/attendance/request/update', [AttendanceController::class, 'updateAttendanceRequestStatus']);
+// this chat routes is use for X purpose:
+// - retrieve all-chat-messages from specific chat-table
+// - store the user message to specific chat-table
+Route::post('/chat', [ChatController::class, 'get']);
+Route::post('/chat/store', [ChatController::class, 'store']);

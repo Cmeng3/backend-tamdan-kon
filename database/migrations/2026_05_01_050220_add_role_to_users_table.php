@@ -15,7 +15,8 @@ return new class extends Migration
             // add role to users table
             $table->string('role')->default('parent')->after('password');
             // add phone_number to users table
-            $table->string('phone_number', 20);
+            // it must be unique
+            $table->string('phone_number', 20)->unique();
         });
     }
 

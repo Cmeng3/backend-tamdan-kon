@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             BusesSeeder::class,
             StudentSeeder::class,
             // AttendanceSeeder::class,
+            ChatSeeder::class,
         ]);
     }
 }
