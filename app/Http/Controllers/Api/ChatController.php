@@ -88,9 +88,15 @@ class ChatController extends Controller
             $chat_id = $student->bus_id;
         } elseif($user->role == 'driver') {
             // $chat_id could be null, do to bus_driver does have a bus yet
-            $chat_id = Bus::where('driver_id', $user_id)->first();
+            $bus = Bus::where('driver_id', $user_id)->first();
+            if(!$bus) {
+                $chat_id = 0;
+            } else{
+                $chat_id = $bus->id;
+            }
         } else {
             // if user is the admin, we extract chat-id directly from request
+            // if request-body doesn't have data, it will return null
             $chat_id = $request->input('chatId');
         }
         // we don't treat is as error, because parent and driver are possibly to not have a chat-box
