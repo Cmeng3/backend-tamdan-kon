@@ -17,6 +17,7 @@ class StudentSeeder extends Seeder
         Student::create([
             'name' => 'lihour',
             'parent_id' => 1,
+            'latlng' => '11.562206, 104.851101',
             'sex' => 'M',
             'bus_id' => 1
         ]);

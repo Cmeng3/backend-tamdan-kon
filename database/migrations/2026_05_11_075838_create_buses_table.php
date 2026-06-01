@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('buses', function (Blueprint $table) {
             $table->id();
             $table->string('bus_name')->default('no_name');
+            $table->string('direction')->default('none')->nullable();
+            $table->text('polyline')->default('none')->nullable(); // we use text, because polyline encoded string have a long sequence of character
             $table->unsignedInteger('driver_id')->default(0);
             $table->boolean('is_active')->default(false);
             $table->timestamps();

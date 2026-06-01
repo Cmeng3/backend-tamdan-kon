@@ -37,6 +37,7 @@ Route::post('/bus/location/create', [BusController::class, 'storeBusLocation']);
 // get specific student and there current attendance-status info
 Route::post('/student', [StudentController::class, 'getStudentInfo']);
 Route::post('/student/id', [StudentController::class, 'getStudentId']);
+Route::post('/student/bus', [StudentController::class, 'getStudentsInfoInBus']);
 // this attendance routes is use for 6 purpose:
 // - retrieve for current student attendance status
 // - retrieve all attendance records for a specific student

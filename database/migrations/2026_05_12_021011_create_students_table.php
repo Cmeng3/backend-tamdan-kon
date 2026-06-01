@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->unsignedInteger('parent_id'); // in future it will be foriegn key
+            $table->string('latlng')->defualt('none')->nullable();
             $table->string('sex', 1);
             $table->unsignedInteger('bus_id')->default(0);
             $table->timestamps();

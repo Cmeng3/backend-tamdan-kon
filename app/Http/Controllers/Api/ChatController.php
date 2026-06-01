@@ -79,6 +79,13 @@ class ChatController extends Controller
         // get the user
         $user_id = $request->input('userId');
         $user = User::where('id', $user_id)->first();
+        // check for user associate with this id
+        if(!$user){
+            return response()->json([
+                'message' => 'Unauthorize access',
+                'error' => 'there no user exist',
+            ], 401);
+        }
         // 
         $chat_id = 0;
         // alternative way to get the chat-id
