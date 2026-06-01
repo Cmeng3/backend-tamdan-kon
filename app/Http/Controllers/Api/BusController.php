@@ -46,6 +46,24 @@ class BusController extends Controller
             'bus_status' => $bus_status,
         ]);
     }
+    //
+    public function getBusId(Request $request) {
+        // extract the driverId from reqeust-body
+        $driver_id = $request->input('driverId');
+        // get the bus that associate with driver id
+        $bus = Bus::where('driver_id', $driver_id)->first();
+        // handle if there no bus
+        if(!$bus) {
+            return response()->json([
+                'message' => 'there no bus associate with the driver yet',
+                'bus_id' => 0
+            ]);
+        }
+        $bus_id = $bus->id;
+        return response()->json([
+            'bus_id' => $bus_id,
+        ]);
+    }
     // store specific bus location to it corresponse database
     // in future developement we will add 2 things:
     // - validate the the request's data
