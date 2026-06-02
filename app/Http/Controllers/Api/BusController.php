@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Bus;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -46,7 +47,7 @@ class BusController extends Controller
             'bus_status' => $bus_status,
         ]);
     }
-    //
+    // get the bus Id
     public function getBusId(Request $request) {
         // extract the driverId from reqeust-body
         $driver_id = $request->input('driverId');
@@ -56,7 +57,8 @@ class BusController extends Controller
         if(!$bus) {
             return response()->json([
                 'message' => 'there no bus associate with the driver yet',
-                'bus_id' => 0
+                'bus_id' => 0,
+                'driver_id' => $driver_id,
             ]);
         }
         $bus_id = $bus->id;
@@ -64,28 +66,73 @@ class BusController extends Controller
             'bus_id' => $bus_id,
         ]);
     }
+    //
+    public function getBusPolyline(Request $request) {
+        $bus_id = $request->input('busId');
+        $bus = Bus::where('id', $bus_id)->first();
+        // check if there is the bus
+        if(!$bus) {
+            return response()->json([
+                'message' => 'bad request',
+                'error' => 'there no bus associate with the driver', 
+            ], 400);
+        }
+        return response()->json([
+            'direction' => $bus->direction,
+            'polyline' => $bus->polyline
+        ]);
+
+    }
     // store specific bus location to it corresponse database
     // in future developement we will add 2 things:
     // - validate the the request's data
     // - checking for authentication: token of bus driver or iot-box api key
     public function storeBusLocation(Request $request){
+        // in future, there will be a validation of each field before inserting into database
         $lat = $request->input('latitude');
         $lng = $request->input('longitude');
-        $bus_number = $request->input('busId');
-        $table = 'bus'.$bus_number.'_locations';
-        $data = DB::table($table)->insert([
+        $bus_id = $request->input('busId');
+        $table = 'bus'.$bus_id.'_locations';
+        // handle the query with try-catch block, becuase there could be possible that laravel throw an QueryException
+        try{
+            $data = DB::table($table)->insert([
             'latitude' => $lat,
             'longitude' => $lng,
             'created_at' => now(),
             'updated_at' => now(),
-        ]);
-
-        return response()->json(
-            [
+            ]);
+        } catch(QueryException $e) {
+            return response()->json([
+                'message' => 'error occure during query',
+                'error' => $e,
+            ], 500);
+        }
+        return response()->json([
                 'data'=> $data,
-            ]
-        );
+            ]);     
+    }
+    // update the bus polyline, during get route direction
+    public function updateBusPolyline(Request $request) {
+        $bus_id = $request->input('busId');
+        $direction = $request->input('direction');
+        $polyline = $request->input('polyline');
+        // check if there a bus exist
+        $bus = Bus::where('id', $bus_id)->first();
+        if(!$bus) {
+            return response()->json([
+            'message' => 'bad request',
+            'error' => 'there no bus associate with the driver',  
+            ], 400);
+        }
+        // later in future we will validate this field first, before inserting into database
+        $bus->direction = $direction;
+        $bus->polyline = $polyline;
+        // update the bus-polyline
+        $bus->save();
         
+        return response()->json([
+            'message' => 'bus polyline update successfully',
+        ]);
     }
     // update the specific bus status
     public function updateBusStatus(Request $request) {
@@ -130,6 +177,5 @@ class BusController extends Controller
                 'data' => $create_table,
             ]
         );
-
     }
 }

@@ -8,6 +8,8 @@ class Bus extends Model
 {
     protected $fillable = [
         'driver_id',
+        'direction',
+        'polyline',
         'is_active',
     ];
 }

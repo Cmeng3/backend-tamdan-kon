@@ -33,6 +33,8 @@ Route::post('/user/update', [UserController::class, 'update']);
 Route::post('/bus/location', [BusController::class, 'getLatestLocation']);
 Route::post('/bus/status', [BusController::class, 'getBusStatus']);
 Route::post('/bus/id', [BusController::class, 'getBusId']);
+Route::post('/bus/polyline', [BusController::class, 'getBusPolyline']);
+Route::post('/bus/polyline/update', [BusController::class, 'updateBusPolyline']);
 Route::post('/bus/status/update', [BusController::class, 'updateBusStatus']);
 Route::post('/bus/location/create', [BusController::class, 'storeBusLocation']);
 // get specific student and there current attendance-status info
