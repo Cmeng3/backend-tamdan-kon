@@ -34,7 +34,7 @@ class ChatController extends Controller
         } elseif($user->role == 'driver') {
             // $chat_id could be null, do to bus_driver does have a bus yet
             $chat = Bus::where('driver_id', $user_id)->first();
-            if($chat) {
+            if(!$chat) {
                 return response()->json([
                     'message' => 'there are bus associate with the driver yet',
                     'data' => []
