@@ -70,9 +70,42 @@ class StudentController extends Controller
             'student_id' => $student->id,
         ]);
     }
-    // get the students information on specific bus
+    // get all student on that specific bus
+    public function getAllStudentOnBus(Request $request) {
+        $driver_id = $request->input('driverId');
+        $bus = Bus::where('driver_id', $driver_id)->first();
+        // check if there no bus associated with driver
+        if(!$bus) {
+            return response()->json([
+              'message' => 'bad request',
+              'error' => 'there no bus associate with driver'  
+            ], 400);
+        }
+        $bus_id = $bus->id;
+        $students = Student::where('bus_id', $bus_id)->get();
+        // store the list of parent-id that associate with student
+        $parents_id_list = [];
+        foreach($students as $student) {
+            $parents_id_list[] = $student->parent_id;
+        } 
+        // get all parent associate with students
+        $parents = User::whereIn('id', $parents_id_list)->get();
+         // create the new student_info list
+        foreach($parents as $index => $parent) {
+            $students[$index]['parent_name'] = $parent['name'];
+            $students[$index]['phone_number'] = $parent['phone_number'];
+        } 
+        // clear out the data
+        $parents = [];
+        $parents_id_list = [];
+        return response()->json([
+            'students' => $students,
+        ]);
+    }
+    // get the current students information on specific bus
+    // it will show all student with it respective status on the bus today
     // this function cuase: 3-sql-query and O(3N) iteration of array with N number of student
-    public function getStudentsInfoInBus(Request $request)
+    public function getStudentsInfoOnBusToday(Request $request)
     {
         $driver_id = $request->input('driverId');
         // get the bus info that driver is own
@@ -124,6 +157,20 @@ class StudentController extends Controller
         }
         return response()->json([
             'data' => $students,
+        ]);
+    }
+    //
+    public function updateStudentLocation(Request $request) {
+        $student_id = $request->input('studentId');
+        $latlng = $request->input('latlng');
+        // we assumpt the student is exist
+        // we assumpt the data is valid
+        $student = Student::where('id', $student_id)->first();
+        $student->latlng = $latlng;
+        $data = $student->save();
+
+        return response()->json([
+            'message' => $data,
         ]);
     }
 }
