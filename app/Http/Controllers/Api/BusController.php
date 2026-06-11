@@ -9,7 +9,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class BusController extends Controller
-{
+{   
+    // get all bus
+    public function getBuses() {
+        $buses = Bus::get();
+        return response()->json([
+            $data = $buses,
+        ]);
+    }
     // get specific bus location from corresponse database
     public function getLatestLocation(Request $request) {
         $bus_id = $request->input('busId');

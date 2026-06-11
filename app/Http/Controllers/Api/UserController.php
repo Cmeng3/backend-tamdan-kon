@@ -3,12 +3,80 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
-{
+{   
+    // get all parents info, with it children info
+    public function getParentsInfo() {
+        $parents = User::where('role', 'parent')->get();
+
+        $parents_id = [];
+        foreach($parents as $parent) {
+            $parents_id[] = $parent['id'];
+        }
+
+        $students = Student::whereIn('parent_id', $parents_id)->get();
+
+        foreach($students as $index => $student) {
+            $parents[$index]['student_name'] = $student['name'];
+            $parents[$index]['location'] = $student['latlng'];
+            $parents[$index]['student_gender'] = $student['sex'];
+            $parents[$index]['bus_number'] = $student['bus_id'];
+        }
+
+        return response()->json([
+            'parents' => $parents,
+        ]);
+    }
+    // create an parent account with it student info
+    public function createParentAccount(Request $request) {
+        $parent = $request->only(['parent_name', 'email', 'phone_number', 'password']);
+
+        // check if the email is unique
+        $email = User::where('email', $parent['email'])->first();
+        $phone_number = User::where('phone_number', $parent['phone_number'])->first();
+        // check if eamil and phone number is unique
+        if($email) {
+            return response()->json([
+                'message' => 'bad request',
+                'error' => 'email must be unique',
+            ], 400);
+        }
+        if($phone_number) {
+            return response()->json([
+                'message' => 'bad request',
+                'error' => 'phone number must be unique',
+            ], 400);
+        }
+        // re-format parent before create the data
+        $parent = [
+            'name' => $parent['parent_name'],
+            'email' => $parent['email'],
+            'phone_number' => $parent['phone_number'],
+            'password' => $parent['password'],
+            'role' => 'parent',
+        ];
+        $parent = User::create($parent);
+
+        $student = $request->only(['student_name', 'location', 'sex', 'bus_number']);
+        $student = [
+            'parent_id' => $parent->id,
+            'name' => $student['student_name'],
+            'latlng' => $student['location'],
+            'sex' => $student['sex'],
+            'bus_id' => $student['bus_number'],
+        ];
+        $student = Student::create($student);
+        
+        return response()->json([
+            'parent' => $parent,
+            'student' => $student,
+        ]);
+    }
     // update specific user-information
     public function update(Request $request) {
         $user_id = $request->input('userId');

@@ -25,11 +25,14 @@ Route::post('/login', [AuthController::class, 'login']);
 
 
 // this is user-controller
+Route::post('/parent', [UserController::class, 'getParentsInfo']);
+Route::post('/parent/create', [UserController::class, 'createParentAccount']);
 Route::post('/user/update', [UserController::class, 'update']);
 // this buses route is use for 3 purpose:
 // - retrieve the latest location from specific bus
 // - retrieve the the current bus status
 // - store the lastest location to the specific bus
+Route::post('/bus/all', [BusController::class, 'getBuses']);
 Route::post('/bus/location', [BusController::class, 'getLatestLocation']);
 Route::post('/bus/status', [BusController::class, 'getBusStatus']);
 Route::post('/bus/id', [BusController::class, 'getBusId']);
