@@ -14,7 +14,7 @@ class BusController extends Controller
     public function getBuses() {
         $buses = Bus::get();
         return response()->json([
-            $data = $buses,
+            'buses' => $buses,
         ]);
     }
     // get specific bus location from corresponse database
