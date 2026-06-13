@@ -26,7 +26,9 @@ Route::post('/login', [AuthController::class, 'login']);
 
 // this is user-controller
 Route::post('/parent', [UserController::class, 'getParentsInfo']);
+Route::post('/driver', [UserController::class, 'getDriversInfo']);
 Route::post('/parent/create', [UserController::class, 'createParentAccount']);
+Route::post('/driver/create', [UserController::class, 'createDriverAccount']);
 Route::post('/user/update', [UserController::class, 'update']);
 // this buses route is use for 3 purpose:
 // - retrieve the latest location from specific bus
@@ -37,6 +39,7 @@ Route::post('/bus/location', [BusController::class, 'getLatestLocation']);
 Route::post('/bus/status', [BusController::class, 'getBusStatus']);
 Route::post('/bus/id', [BusController::class, 'getBusId']);
 Route::post('/bus/polyline', [BusController::class, 'getBusPolyline']);
+Route::post('/bus/assign', [BusController::class, 'assignDriverABus']);
 Route::post('/bus/polyline/update', [BusController::class, 'updateBusPolyline']);
 Route::post('/bus/status/update', [BusController::class, 'updateBusStatus']);
 Route::post('/bus/location/create', [BusController::class, 'storeBusLocation']);

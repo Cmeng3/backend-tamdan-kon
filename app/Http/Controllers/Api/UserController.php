@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Bus;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -30,6 +31,43 @@ class UserController extends Controller
 
         return response()->json([
             'parents' => $parents,
+        ]);
+    }
+    // get all driver infomation
+    public function getDriversInfo() {
+        $drivers = User::where('role', 'driver')->get();
+        $drivers_id = [];
+        // store all driver_id
+        foreach($drivers as $driver) {
+            $drivers_id[] = $driver->id;
+        }
+        // get all associate bus with driver
+        $buses = Bus::whereIn('driver_id', $drivers_id)->get();
+        // create a new list that store the driver_with it associate bus
+        $driver_bus = [];
+        foreach($drivers_id as $id) {
+            $is_assign = false;
+            $bus_id = 0;
+            foreach($buses as $bus) {
+                if($bus->driver_id == $id){
+                    $is_assign = true;
+                    $bus_id = $bus->id;
+                }
+            }
+            
+            $driver_bus[] = [
+                'hasBus' => $is_assign,
+                'busId' => $bus_id,
+            ];
+        }
+        // adjust bus assign info to existing $drivers 
+        foreach($driver_bus as $index => $bus) {
+            $drivers[$index]['hasBus'] = $bus['hasBus'];
+            $drivers[$index]['busId'] = $bus['busId'];
+        }
+
+        return response()->json([
+            'data' => $drivers,
         ]);
     }
     // create an parent account with it student info
@@ -76,6 +114,42 @@ class UserController extends Controller
             'parent' => $parent,
             'student' => $student,
         ]);
+    }
+    // create driver account
+    public function createDriverAccount(Request $request) {
+        $driver_info = $request->only(['name', 'email', 'phone_number', 'password']);
+        $driver_info['role'] = 'driver';
+
+        // check if the email is unique
+        $email = User::where('email', $driver_info['email'])->first();
+        $phone_number = User::where('phone_number', $driver_info['phone_number'])->first();
+        // check if eamil and phone number is unique
+        if($email) {
+            return response()->json([
+                'message' => 'bad request',
+                'error' => 'email must be unique',
+            ], 400);
+        }
+        if($phone_number) {
+            return response()->json([
+                'message' => 'bad request',
+                'error' => 'phone number must be unique',
+            ], 400);
+        }
+
+        $driver = User::create($driver_info);
+        // assign the driver to the bus
+        $bus_id = $request->input('busId');
+        if($bus_id != 0) {
+            $bus = Bus::where('id', $bus_id)->first();
+            $bus->driver_id = $driver->id;
+            $bus->save();
+        }
+
+        return response()->json([
+            'data' => $driver,
+        ]);
+
     }
     // update specific user-information
     public function update(Request $request) {

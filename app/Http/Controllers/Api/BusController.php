@@ -26,7 +26,7 @@ class BusController extends Controller
         if($location == null) {
             $lat = '11.587098';
             $lng = '104.844813';
-        } else {
+        } else { 
             $lat = $location->latitude;
             $lng = $location->longitude;
         }
@@ -117,6 +117,28 @@ class BusController extends Controller
         return response()->json([
                 'data'=> $data,
             ]);     
+    }
+    // 
+    public function assignDriverABus(Request $request){
+        $bus_id = $request->busId;
+        $driver_id = $request->driverId;
+
+        // remove the driver from previous bus if have
+        $bus = Bus::where('driver_id', $driver_id)->first();
+        if($bus) {
+            $bus->driver_id = 0;
+            $bus->save();
+        }
+
+        // assign driver to that specific bus
+        $bus = Bus::where('id', $bus_id)->first();
+        $bus->driver_id = $driver_id;
+        $bus->save();
+
+        return response()->json([
+            'message' => 'bus assign successful',
+        ]);
+       
     }
     // update the bus polyline, during get route direction
     public function updateBusPolyline(Request $request) {
