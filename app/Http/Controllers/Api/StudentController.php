@@ -72,16 +72,7 @@ class StudentController extends Controller
     }
     // get all student on that specific bus
     public function getAllStudentOnBus(Request $request) {
-        $driver_id = $request->input('driverId');
-        $bus = Bus::where('driver_id', $driver_id)->first();
-        // check if there no bus associated with driver
-        if(!$bus) {
-            return response()->json([
-              'message' => 'bad request',
-              'error' => 'there no bus associate with driver'  
-            ], 400);
-        }
-        $bus_id = $bus->id;
+        $bus_id = $request->input('busId');
         $students = Student::where('bus_id', $bus_id)->get();
         // store the list of parent-id that associate with student
         $parents_id_list = [];
@@ -160,6 +151,21 @@ class StudentController extends Controller
         ]);
     }
     //
+    public function updateStudentABus(Request $request) {
+        $bus_id = $request->input('busId');
+        $student_id = $request->input('studentId');
+        // query for the student
+        $student = Student::where('id', $student_id)->first();
+        // update student a bus 
+        $student->bus_id = $bus_id;
+        $student->save();
+
+        return response()->json([
+            'message' => 'student change bus succefully'
+        ]);
+        
+    }
+    // update student geolocation
     public function updateStudentLocation(Request $request) {
         $student_id = $request->input('studentId');
         $latlng = $request->input('latlng');

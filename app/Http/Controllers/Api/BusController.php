@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Bus;
+use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +16,33 @@ class BusController extends Controller
         $buses = Bus::get();
         return response()->json([
             'buses' => $buses,
+        ]);
+    }
+    //
+    public function getBusesAndDriver() {
+        $buses = Bus::get();
+        // store the list of driver_id associated with bus
+        // it could be driver with id = 0, mean no driver
+        $drivers_id = [];
+        foreach($buses as $bus) {
+            $drivers_id[] = $bus->driver_id;
+        }
+        // store the list of drivers that have a bus
+        $drivers = User::whereIn('id', $drivers_id)->get();
+        foreach($drivers_id as $index => $id) {
+            // index of drivers, to avoid repeart iteration through whole array again
+            $k = 0;
+            if($id == 0) {
+                $buses[$index]['driver_name'] = 'no driver';
+            } else {
+                $buses[$index]['driver_name'] = $drivers[$k]->name;
+                $k++;
+            }
+        }
+        $drivers = [];
+        $drivers_id = [];
+        return response()->json([
+            'data' => $buses,
         ]);
     }
     // get specific bus location from corresponse database
@@ -197,13 +225,47 @@ class BusController extends Controller
     }
     // for testing dynamically creating bus_locations table
     // this method will later use to create a new bus locations database
-    public function createBus() {
-        $create_table = DB::statement('CREATE TABLE bus2_location (ID INT PRIMARY KEY, Name VARCHAR(50));');
+    public function createBus(Request $request) {
+        $bus_name = $request->input('busName');
+        $driver_id = 0;
+        
+        if($bus_name == null) {
+            $bus_name = 'no_name';
+        }
+        // creating the new bus with driver_id and bus_name
+        $bus = Bus::create([
+            'bus_name' => $bus_name,
+            'driver_id' => $driver_id
+        ]);
+        // create new bus location table
+        $table = 'bus'.$bus->id.'_locations';
+        $stm = "
+            CREATE TABLE `$table` (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                latitude VARCHAR(20),
+                longitude VARCHAR(20),
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )";
+        $create_bus_locations_table = DB::statement($stm);
+        // create new chat table
+        $table = 'chat'.$bus->id;
+        $stm = "
+            CREATE TABLE `$table` (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                message VARCHAR(1024),
+                user_id INTEGER,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )";
+
+        $create_chat_table = DB::statement($stm);
 
         return response()->json(
             [
                 'message' => 'create table success',
-                'data' => $create_table,
+                'bus_location_table' => $create_bus_locations_table,
+                'chat_table' => $create_chat_table,
             ]
         );
     }
