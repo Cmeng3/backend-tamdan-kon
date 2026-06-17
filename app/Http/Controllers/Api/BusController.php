@@ -29,9 +29,10 @@ class BusController extends Controller
         }
         // store the list of drivers that have a bus
         $drivers = User::whereIn('id', $drivers_id)->get();
+        $k = 0;
         foreach($drivers_id as $index => $id) {
             // index of drivers, to avoid repeart iteration through whole array again
-            $k = 0;
+            
             if($id == 0) {
                 $buses[$index]['driver_name'] = 'no driver';
             } else {
