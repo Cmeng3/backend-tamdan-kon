@@ -28,7 +28,7 @@ class BusController extends Controller
             $drivers_id[] = $bus->driver_id;
         }
         // store the list of drivers that have a bus
-        $drivers = User::whereIn('id', $drivers_id)->get();
+        $drivers = User::whereIn('id', $drivers_id)->orderBy('created_at', 'desc')->get();
         $k = 0;
         foreach($drivers_id as $index => $id) {
             // index of drivers, to avoid repeart iteration through whole array again
