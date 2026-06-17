@@ -35,15 +35,14 @@ class BusController extends Controller
             
             if($id == 0) {
                 $buses[$index]['driver_name'] = 'no driver';
-                $k++;
             } else {
                 $buses[$index]['driver_name'] = $drivers[$k]->name;
                 $k++;
             }
         }
-        $drivers = [];
-        $drivers_id = [];
         return response()->json([
+            'driver_id' => $drivers_id,
+            'drivers' => $drivers,
             'data' => $buses,
         ]);
     }
