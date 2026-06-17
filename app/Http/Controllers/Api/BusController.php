@@ -241,7 +241,7 @@ class BusController extends Controller
         $table = 'bus'.$bus->id.'_locations';
         $stm = "
             CREATE TABLE `$table` (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                id INTEGER PRIMARY KEY AUTO_INCREMENT,
                 latitude VARCHAR(20),
                 longitude VARCHAR(20),
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -252,7 +252,7 @@ class BusController extends Controller
         $table = 'chat'.$bus->id;
         $stm = "
             CREATE TABLE `$table` (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                id INTEGER PRIMARY KEY AUTO_INCREMENT,
                 message VARCHAR(1024),
                 user_id INTEGER,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
