@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Attendance;
 use App\Models\AttendanceRequest;
+use App\Models\Student;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class AttendanceController extends Controller
@@ -65,7 +67,7 @@ class AttendanceController extends Controller
             ]
         );
     }
-    //
+    // get a student request status
     public function getAttendanceRequestStatus(Request $request) {
         // extract student id from request-body
         $student_id = $request->input('studentId');
@@ -88,6 +90,39 @@ class AttendanceController extends Controller
         }
         return response()->json([
             'status' => $status,
+        ]);
+    }
+    // get all students request status on today
+    public function getAllStudentsRequestStatus() {
+        $all_request =  AttendanceRequest::whereDate('created_at', today())->where('status', false)->orderBy('student_id')->get();
+        // get all student id
+        $students_id = [];
+        foreach($all_request as $request) {
+            $students_id[] = $request->student_id;
+        }
+        // store the students info
+        $students = Student::whereIn('id', $students_id)->get();
+
+        //parents id
+        $parents_id = [];
+        foreach($students as $student) {
+            $parents_id[] = $student->parent_id;
+        }
+        $parents = User::whereIn('id', $parents_id)->get();
+
+        // let assume that all parents info, is other co-response to their children, becuase parent who register first, their children must position frist in the table
+        // this concatenate information will false, when parent have multiple children, becuase children order might not match the parent order anymore
+        foreach($students as $index => $student) {
+            $all_request[$index]['student'] = $student->name;
+            $all_request[$index]['bus_id'] = $student->bus_id;
+            $all_request[$index]['parent'] = $parents[$index]->name;
+        }
+
+        // sort the order back to normal, by who request first appear first
+        $all_request = collect($all_request)->sortBy('created_at')->values()->all();
+        
+        return response()->json([
+            'attendances_request' => $all_request,
         ]);
     }
     // store the attendance-request permission record from parent

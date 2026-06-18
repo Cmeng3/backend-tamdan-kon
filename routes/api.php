@@ -63,6 +63,7 @@ Route::post('/attendance', [AttendanceController::class, 'get']);
 Route::post('/attendances', [AttendanceController::class, 'getAll']);
 Route::post('/attendance/create', [AttendanceController::class, 'store']);
 Route::post('/attendance/request/status', [AttendanceController::class, 'getAttendanceRequestStatus']);
+Route::post('/attendance/request/status/all', [AttendanceController::class, 'getAllStudentsRequestStatus']);
 Route::post('/attendance/request/create', [AttendanceController::class, 'storeAttendanceRequest']);
 Route::post('/attendance/request/update', [AttendanceController::class, 'updateAttendanceRequestStatus']);
 // this chat routes is use for X purpose:
