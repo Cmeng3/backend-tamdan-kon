@@ -93,7 +93,7 @@ class AttendanceController extends Controller
         ]);
     }
     // get all students request status on today
-    public function getAllStudentsRequestStatus() {
+    public function getAllStudentsAttendanceRequest() {
         $all_request =  AttendanceRequest::whereDate('created_at', today())->where('status', false)->orderBy('student_id')->get();
         // get all student id
         $students_id = [];
