@@ -245,8 +245,8 @@ class BusController extends Controller
         $stm = "
             CREATE TABLE `$table` (
                 id INTEGER PRIMARY KEY AUTO_INCREMENT,
-                latitude VARCHAR(20),
-                longitude VARCHAR(20),
+                latitude VARCHAR(30),
+                longitude VARCHAR(30),
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )";

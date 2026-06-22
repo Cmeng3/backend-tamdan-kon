@@ -15,9 +15,7 @@ class BusesSeeder extends Seeder
     {
         //
         Bus::create(
-            [
-                'driver_id' => 2,
-            ]
+            ['driver_id' => 2,]
         );
     }   
 }
