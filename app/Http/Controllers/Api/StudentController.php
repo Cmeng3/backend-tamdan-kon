@@ -122,14 +122,18 @@ class StudentController extends Controller
         $attendances = Attendance::whereDate('created_at', today())->whereIn('student_id', $studentId_list)->get();
         $attendance_request = AttendanceRequest::whereDate('created_at', today())->whereIn('student_id', $studentId_list)->where('status', 0)->get();
 
+        // ordering result
+        $attendances = collect($attendances)->sortBy('student_id')->values()->all();
+        $attendance_request = collect($attendance_request)->sortBy('student_id')->values()->all();
         // creating the new list of student_attendance by mapping with 3 arrays above
         $students_attendance = [];
-        foreach($studentId_list as $student) {
-            // we must check the length of $attendances and $attendance_request, to prevent accessing non-exist element
+        // we must check the length of $attendances and $attendance_request, to prevent accessing non-exist element
             $pre_len = count($attendances);
             $pen_len = count($attendance_request);
             $present = 0;
             $pending = 0;
+
+        foreach($studentId_list as $student) {
             if(($pre_len > 0) && ($present < $pre_len) && ($student == $attendances[$present]->student_id)) {
                 $students_attendance[] = 'present';
                 $present++;
@@ -147,6 +151,7 @@ class StudentController extends Controller
             $students[$index] = $student;
         }
         return response()->json([
+            // 'attendence_request' => $attendance_request,
             'data' => $students,
         ]);
     }

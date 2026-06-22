@@ -22,7 +22,7 @@ class StudentSeeder extends Seeder
             ['name' => 'vorlek', 'parent_id' => 7, 'latlng' => '11.5607913,104.8903696', 'sex' => 'F', 'bus_id' => 1],
             ['name' => 'sompitou', 'parent_id' => 8, 'latlng' => '11.546562, 104.906830', 'sex' => 'M', 'bus_id' => 1],
             ['name' => 'chhay Yuth', 'parent_id' => 9, 'latlng' => '11.541641, 104.914120', 'sex' => 'F', 'bus_id' => 1],
-            ['name' => 'heng lita', 'parent_id' => 10, 'latlng' => '11.586632, 104.845322', 'sex' => 'F', 'bus_id' => 1],
+            ['name' => 'heng lita', 'parent_id' => 10, 'latlng' => '11.562339, 104.840870', 'sex' => 'F', 'bus_id' => 1],
         ];
         //
         foreach($students as $student){
