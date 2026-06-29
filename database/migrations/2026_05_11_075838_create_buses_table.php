@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('bus_name')->default('no_name');
             $table->string('direction')->nullable();
             $table->text('polyline')->nullable(); // we use text, because polyline encoded string have a long sequence of character
+            $table->text('estimation_time_arrival')->nullable();
             $table->unsignedInteger('driver_id')->default(0);
             $table->boolean('is_active')->default(false);
             $table->timestamps();

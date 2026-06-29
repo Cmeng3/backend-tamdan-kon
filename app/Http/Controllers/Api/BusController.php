@@ -117,7 +117,8 @@ class BusController extends Controller
         }
         return response()->json([
             'direction' => $bus->direction,
-            'polyline' => $bus->polyline
+            'polyline' => $bus->polyline,
+            'eta' => $bus->estimation_time_arrival
         ]);
 
     }
@@ -176,6 +177,8 @@ class BusController extends Controller
         $bus_id = $request->input('busId');
         $direction = $request->input('direction');
         $polyline = $request->input('polyline');
+        $eta = $request->input('eta');
+        // gonna write something here
         // check if there a bus exist
         $bus = Bus::where('id', $bus_id)->first();
         if(!$bus) {
@@ -187,9 +190,9 @@ class BusController extends Controller
         // later in future we will validate this field first, before inserting into database
         $bus->direction = $direction;
         $bus->polyline = $polyline;
+        $bus->estimation_time_arrival = $eta;
         // update the bus-polyline
         $bus->save();
-        
         return response()->json([
             'message' => 'bus polyline update successfully',
         ]);
