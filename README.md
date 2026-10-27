@@ -1,6 +1,6 @@
-*Part of the Tamdan-Kon school bus tracking system — see other related repo from [full project overview](https://github.com/Konnarak1234/tamdan-kon)*
+*This is the backend or the API integration of my Tamdankon project*
 
-## Repositary description
+## Repositary descriptions
 This repo is used for storing **Tamdan-Kon api** project folder. 
 
 ## Technology used
